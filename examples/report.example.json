@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-23",
+  "generatedAt": "2026-10-23T12:08:00+02:00",
+  "headline": "Example data for the two sample projects in config.example.toml. Your scout's first run replaces it.",
+  "sources": { "github": 40, "x": 20, "xMode": "search" },
+  "picks": ["gh-anthropics-skills", "gh-remotion-dev-remotion", "gh-openai-codex"],
+  "items": [
+    {
+      "id": "gh-anthropics-skills",
+      "title": "anthropics/skills · official Agent Skills examples",
+      "url": "https://github.com/anthropics/skills",
+      "source": "github",
+      "author": "anthropics",
+      "category": "agent-tools",
+      "summary": "Anthropic's public repository of Agent Skills: folders of instructions and scripts that Claude loads when a task needs them.",
+      "projects": [
+        { "key": "shop", "fit": 2, "how": "Use the front-end design skill when the agent builds product and landing pages, so they look less generic." },
+        { "key": "game", "fit": 1, "how": "Read how the skills are structured before writing a skill for the game's art pipeline." }
+      ],
+      "effort": "10 min",
+      "verdict": "try",
+      "caution": "Skills can contain scripts; read them before enabling.",
+      "verified": true
+    },
+    {
+      "id": "gh-remotion-dev-remotion",
+      "title": "remotion-dev/remotion · make videos with React",
+      "url": "https://github.com/remotion-dev/remotion",
+      "source": "github",
+      "author": "remotion-dev",
+      "category": "aigc",
+      "summary": "Write videos as React components and render them to MP4, which lets an agent produce templated product videos.",
+      "projects": [
+        { "key": "shop", "fit": 2, "how": "Turn product photos and prices into short vertical promo clips from one template." }
+      ],
+      "effort": "half a day",
+      "verdict": "save",
+      "caution": "Check the Remotion license: companies above a size limit need a paid license.",
+      "verified": true
+    },
+    {
+      "id": "gh-openai-codex",
+      "title": "openai/codex · CLI releases",
+      "url": "https://github.com/openai/codex/releases",
+      "source": "github",
+      "author": "openai",
+      "category": "agent-tools",
+      "summary": "Release notes for the Codex CLI coding agent.",
+      "projects": [
+        { "key": "game", "fit": 1, "how": "Compare with your current agent before splitting game tasks between two agents." }
+      ],
+      "effort": "10 min",
+      "verdict": "watch",
+      "verified": true
+    }
+  ],
+  "tips": [
+    {
+      "tool": "Claude Code",
+      "title": "Keep project rules in AGENTS.md / CLAUDE.md",
+      "detail": "Write each project's do-and-don't rules in the repository so scheduled agents and the trial runner read them before acting."
+    }
+  ],
+  "sections": [],
+  "followups": []
+}

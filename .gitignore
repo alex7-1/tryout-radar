@@ -1,0 +1,14 @@
+# your settings and everything generated from them
+config.toml
+data/
+site/
+sandbox/
+.env
+*.local.*
+
+__pycache__/
+*.pyc
+*.tmp
+
+# written by Claude Code when it loads the plugin from this folder
+.claude-plugin/types/

@@ -1,0 +1,222 @@
+# Tryout Radar configuration.
+# Copy this file to config.toml (git-ignored) and edit it. The scout and trial-runner agents read it on every run.
+# Never put secrets in this file: name an environment variable instead (settings ending in _env).
+
+language = "en"                 # digest, site and reports language: "en" or "zh-CN" (other values fall back to English UI)
+
+[paths]                          # relative to this file
+data_dir = "data"                # reports, feedback, trial queue
+site_dir = "site"                # generated static site
+sandbox_dir = "sandbox"          # where trials run (one folder per trial)
+
+[site]
+title = "Tryout Radar"
+# Public URL of site_dir, ending with "/". Used in notification links.
+# With `tryout_radar serve` behind a reverse proxy this is https://your.host/<secret_path>/
+base_url = "https://radar.example.com/CHANGE-ME-to-a-long-random-string/"
+
+[server]                         # `python -m tryout_radar serve`
+host = "127.0.0.1"
+port = 8091
+# Anyone who knows the URL can read the digest and press the buttons. Use a long random path, e.g.
+#   python -c "import secrets; print(secrets.token_urlsafe(18))"
+secret_path = "CHANGE-ME-to-a-long-random-string"
+
+[digest]
+min_items = 5
+max_items = 15
+lookback_hours = 72              # only things new or updated in this window
+dedupe_days = 14                 # don't repeat items reported in this window
+summary_max_bytes = 1500         # size of the notification summary
+
+[trial]
+max_per_run = 3                  # trials per nightly run; the rest wait for the next night
+daily_request_limit = 10         # button presses accepted per day
+minutes_per_trial = 40
+schedule_note = "22:00"          # when your trial runner is scheduled (shown on the site)
+extra_stop_rules = [             # added to the built-in stop rules in prompts/trial.md
+  # "Never run anything that needs Docker on this machine.",
+]
+
+# ---------------------------------------------------------------------------
+# Your projects. The scout scores every candidate against each one; the trial runner works in `path`.
+# trial_mode: "try"    = install and run it in a sandbox branch / copy, run the project's tests, report
+#             "assess" = read-only evaluation, no code changes (safe default)
+#             "off"    = never offered on the site's "Try it" button
+# ---------------------------------------------------------------------------
+
+[[projects]]
+key = "shop"                     # lowercase letters, digits, "-"
+name = "Web shop"
+path = "~/code/shop"
+about = """
+Next.js storefront + small Node API for a family online shop (about 300 products).
+Pain points: slow product pages on mobile, no end-to-end tests, product photos edited by hand.
+"""
+interests = ["landing page conversion", "Playwright tests", "product photo editing"]
+rules_files = ["AGENTS.md", "CLAUDE.md"]   # read before any trial; project rules beat this tool's rules
+trial_mode = "try"
+
+[[projects]]
+key = "game"
+name = "Mobile mini game"
+path = "~/code/mini-game"
+about = """
+Cocos Creator 3.8 casual game for mobile mini-game platforms. Not yet integrated with the platform SDK.
+Needs: sprite and animation generation, balancing, automated playtests.
+"""
+interests = ["game art generation", "playtest automation", "mini-game SDK"]
+rules_files = ["AGENTS.md"]
+trial_mode = "assess"
+
+# ---------------------------------------------------------------------------
+# Discovery: before each digest the scout looks at what you worked on lately (Claude Code / Codex session
+# titles and folders only, never message content) and adds new directions it spots to data/projects.auto.json.
+# You can stop following one with the button on the site or `python -m tryout_radar project ignore KEY`.
+# ---------------------------------------------------------------------------
+
+[discovery]
+enabled = true
+days = 7
+max_new_per_day = 2
+watch_folders = ["~/code"]          # a new subfolder here with agent activity can be a new project
+ignore_titles = []                  # regexes, e.g. "^\\[cron\\]" for scheduled-task sessions
+ignore_paths = []                   # folders never to report
+collapse_paths = []                 # folders whose per-session subfolders should count as one place
+
+# ---------------------------------------------------------------------------
+# Topics = what to watch. Each topic is also a category on the site.
+# ---------------------------------------------------------------------------
+
+[[topics]]
+key = "agent-tools"
+name = "Claude Code / Codex"
+focus = "New skills, plugins, MCP servers, hooks, AGENTS.md / CLAUDE.md patterns and multi-agent workflows that make coding agents more useful."
+github_queries = ["claude skill", "agent skills", "SKILL.md", "claude code", "codex cli", "mcp server"]
+x_queries = ["\"claude code\"", "claude skills", "codex cli", "AGENTS.md"]
+watch = [
+  "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
+  "https://github.com/openai/codex/releases",
+  "https://github.com/anthropics/skills",
+]
+
+[[topics]]
+key = "web"
+name = "Web design"
+focus = "Tools and skills that make agent-built pages look less generic and convert better; testing and performance."
+github_queries = ["landing page design", "frontend design skill", "playwright agent"]
+x_queries = ["frontend design skill", "landing page AI"]
+watch = []
+
+[[topics]]
+key = "aigc"
+name = "AIGC"
+focus = "Image, video, 3D and audio generation workflows that can run locally or cheaply; commercial-use licenses matter."
+github_queries = ["comfyui", "image to 3d", "text to speech", "remotion"]
+x_queries = ["comfyui workflow", "image to 3d"]
+watch = []
+
+[[topics]]
+key = "game"
+name = "Games"
+focus = "Mini-game SDKs, Cocos Creator tooling, AI game art, balancing and playtest automation."
+github_queries = ["cocos creator", "minigame sdk", "game asset generation"]
+x_queries = ["cocos creator", "AI game art"]
+watch = []
+
+# ---------------------------------------------------------------------------
+# Sources
+# ---------------------------------------------------------------------------
+
+[sources.github]
+enabled = true
+token_env = "GITHUB_TOKEN"       # optional: raises the search API rate limit (a token without any scopes is enough)
+min_stars = 5                    # API mode: new repositories need at least this many stars
+max_requests = 24                # API mode: search calls per run, paced to the limit (~6 s apart without a token)
+trending = [
+  "https://github.com/trending?since=daily",
+  "https://github.com/trending/python?since=daily",
+  "https://github.com/trending/typescript?since=daily",
+]
+
+[sources.x]
+# "search"  = web search restricted to x.com (no login, fewer results)
+# "browser" = read X in a browser your agent controls and is logged in to; read-only, falls back to "search"
+# "off"
+mode = "search"
+accounts = ["claudeai", "AnthropicAI", "OpenAIDevs"]
+
+[sources.web]
+enabled = true                   # general web search for topics where X and GitHub are thin
+
+[sources.hn]                     # API mode: Hacker News stories through the free Algolia API
+enabled = true
+min_points = 30
+
+[sources.search]                 # API mode: general web search, and X through "site:x.com". Agents use their own search.
+provider = "none"                # "searxng" (set url to your instance), "brave" or "tavily" (set key_env)
+url = ""
+key_env = ""                     # e.g. "BRAVE_API_KEY": the environment variable that holds the key
+max_requests = 12
+
+# ---------------------------------------------------------------------------
+# API mode: `python -m tryout_radar scout` runs the daily scout with any chat model, no coding agent needed.
+# Code collects, checks and publishes; the model only judges and writes (see README, "Run with any model").
+# Leave base_url empty when a coding agent runs prompts/scout.md instead.
+# Any OpenAI-compatible endpoint works; check your provider's docs for its current model names. For example:
+#   OpenAI      https://api.openai.com/v1
+#   DeepSeek    https://api.deepseek.com/v1
+#   Qwen        https://dashscope.aliyuncs.com/compatible-mode/v1
+#   Kimi        https://api.moonshot.cn/v1
+#   GLM         https://open.bigmodel.cn/api/paas/v4
+#   Gemini      https://generativelanguage.googleapis.com/v1beta/openai
+#   OpenRouter  https://openrouter.ai/api/v1
+#   Ollama      http://localhost:11434/v1        (local model, api_key_env = "")
+# ---------------------------------------------------------------------------
+
+[model]
+base_url = ""                    # e.g. "https://api.deepseek.com/v1"
+model = ""                       # e.g. "deepseek-chat"
+api_key_env = ""                 # e.g. "DEEPSEEK_API_KEY": the environment variable that holds the key
+temperature = 0.2
+timeout = 180                    # seconds per request
+json_mode = true                 # ask for JSON replies; turned off by itself if the provider refuses it
+max_tokens = 0                   # 0 = the provider's default
+
+[scout]                          # API mode
+max_candidates = 40              # candidates the model reads per run, after code has ranked them
+batch_size = 12                  # candidates per request; lower it for small local models
+excerpt_chars = 1000             # README / changelog text per candidate
+check_links = true               # open web links before they go into the digest
+
+# ---------------------------------------------------------------------------
+# Notifications: every channel listed here gets the daily summary, trial receipts and trial reports.
+# ---------------------------------------------------------------------------
+
+# [[notify]]
+# type = "wecom_webhook"         # WeCom group robot
+# key_env = "WECOM_WEBHOOK_KEY"
+
+# [[notify]]
+# type = "wecom_app"             # WeCom self-built app (needs the sending server's IP in the app's trusted IPs)
+# corp_id_env = "WECOM_CORP_ID"
+# secret_env = "WECOM_APP_SECRET"
+# to_user_env = "WECOM_TO_USER"
+# agent_id = 1000002
+
+# [[notify]]
+# type = "feishu_webhook"
+# url_env = "FEISHU_WEBHOOK_URL"
+
+# [[notify]]
+# type = "telegram"
+# token_env = "TELEGRAM_BOT_TOKEN"
+# chat_id_env = "TELEGRAM_CHAT_ID"
+
+# [[notify]]
+# type = "slack_webhook"
+# url_env = "SLACK_WEBHOOK_URL"
+
+# [[notify]]
+# type = "discord_webhook"
+# url_env = "DISCORD_WEBHOOK_URL"

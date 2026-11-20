@@ -1,0 +1,20 @@
+# systemd unit for `python -m tryout_radar serve` (site + button API).
+# Copy to /etc/systemd/system/, adjust User and paths, then:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now tryout-radar
+[Unit]
+Description=Tryout Radar site and button API
+After=network.target
+
+[Service]
+User=radar
+WorkingDirectory=/opt/tryout-radar
+Environment=TRYOUT_RADAR_CONFIG=/opt/tryout-radar/config.toml
+# Notification secrets, one KEY=value per line, readable only by User:
+EnvironmentFile=-/opt/tryout-radar/.env
+ExecStart=/usr/bin/python3 -B -m tryout_radar serve
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

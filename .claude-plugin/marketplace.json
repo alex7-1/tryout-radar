@@ -1,0 +1,6 @@
+{
+  "name": "tryout-radar",
+  "description": "Tryout Radar: find new AI tools that fit your projects, try them in a sandbox branch, get a report.",
+  "owner": { "name": "alex7-1" },
+  "plugins": [{ "name": "tryout-radar", "source": "./" }]
+}

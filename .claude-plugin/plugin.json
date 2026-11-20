@@ -1,0 +1,7 @@
+{
+  "name": "tryout-radar",
+  "version": "0.3.0",
+  "description": "Daily scout for new AI tools scored against your own projects, one-click trials in a sandbox branch, and a panel (/radar) to manage projects, topics and trials.",
+  "author": { "name": "alex7-1" },
+  "types": "./types/index.d.ts"
+}

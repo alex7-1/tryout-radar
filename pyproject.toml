@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tryout-radar"
+version = "0.3.0"
+description = "Find new AI tools that fit your projects, try them in a sandbox branch, report back."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+tryout-radar = "tryout_radar.cli:main"
+
+[tool.setuptools]
+packages = ["tryout_radar"]
