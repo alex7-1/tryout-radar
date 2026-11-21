@@ -4,9 +4,9 @@
 
 [English](README.md) · [介绍 / Introduction](docs/INTRO.md)
 
-[![一分半钟看懂 Tryout Radar（视频）](docs/media/intro-zh.jpg)](https://github.com/alex7-1/tryout-radar/releases/download/v0.3.0/tryout-radar-intro-zh.mp4)
+[![一分半钟看懂 Tryout Radar（视频）](docs/media/intro-zh.jpg)](https://github.com/alex7-1/tryout-radar/releases/download/v0.3.0/tryout-radar-intro.mp4)
 
-*一分半钟的介绍视频（中文配音，中英字幕）。也有 [英文配音版](https://github.com/alex7-1/tryout-radar/releases/download/v0.3.0/tryout-radar-intro-en.mp4)。*
+*一分半钟的介绍视频：英文配音，中英双语字幕。*
 
 每天，一个编程 agent（*侦察员*）在 GitHub、X 和网上找新出的 skill、MCP、agent 用法和生成工具，只留下对*你的*项目真正有用的，并写清楚每条对哪个项目有用、用在哪里、上手要多久。你在手机上看日报，看到好用的就点 **交给项目试**；当晚另一个 agent（*试用员*）在那个项目的单独分支里装上、跑项目自己的测试，然后把报告发给你：建议采纳、不建议用，还是要你决定。
 

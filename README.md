@@ -4,9 +4,9 @@
 
 [中文说明](README.zh-CN.md) · [Introduction / 介绍](docs/INTRO.md)
 
-[![Tryout Radar in 90 seconds (video)](docs/media/intro-en.jpg)](https://github.com/alex7-1/tryout-radar/releases/download/v0.3.0/tryout-radar-intro-en.mp4)
+[![Tryout Radar in 90 seconds (video)](docs/media/intro-en.jpg)](https://github.com/alex7-1/tryout-radar/releases/download/v0.3.0/tryout-radar-intro.mp4)
 
-*The 90-second intro video. Also in [Chinese with English subtitles](https://github.com/alex7-1/tryout-radar/releases/download/v0.3.0/tryout-radar-intro-zh.mp4).*
+*The 90-second intro video: English voice-over, Chinese and English subtitles.*
 
 Every day a coding agent (the *scout*) reads GitHub, X and the web for new skills, MCP servers, agent tricks and generation tools, keeps only what would help *your* projects, and says for each one which project it helps, where, and how much effort it takes. You read the digest on your phone. When something looks good you press **Try it in a project**; that night a second agent (the *trial runner*) installs it in a sandbox branch of that project, runs it with the project's own tests, and sends you a report: adopt, don't use, or your call.
 
