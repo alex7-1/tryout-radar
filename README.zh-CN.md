@@ -55,7 +55,7 @@ GitHub · X · 网页 ──► 侦察员（每天）──► 日报网页 ─�
 - **一键试用。** 排队的请求会变成分支 `tryout/<编号>` 上的 git worktree：安装、跑测试、出带证据的报告（命令、测试结果、改动统计）。不合并、不推送；采纳是你另外发起的一步。
 - **项目规矩优先。** 试用员动手前先读项目的 `AGENTS.md` / `CLAUDE.md`；遇到要花钱、要钥匙、要管理员权限、要碰线上、要往外发数据的步骤就停下来问你。
 - **侦察员可以用任何模型。** OpenAI、DeepSeek、通义千问、Kimi、智谱、Gemini、Claude、OpenRouter，或者 Ollama 里的本地模型：固定步骤由代码做，模型只负责判断，它的回答进日报前会逐项检查。
-- **推送**到企业微信（群机器人或自建应用）、飞书、Telegram、Slack 或 Discord。
+- **推送**到企业微信（群机器人或自建应用）、飞书、Telegram、Slack 或 Discord（[每个渠道怎么设](docs/notifications.zh-CN.md)）。
 - **零依赖。** 只用 Python 3.11+ 标准库：静态网页 + 一个给按钮用的小服务。
 
 ## 组成
@@ -92,7 +92,7 @@ Read prompts/scout.md in this folder completely and follow it exactly.      （�
 Read prompts/trial.md in this folder completely and follow it exactly.      （每晚 22:00）
 ```
 
-想在手机上看：在一台能通过 HTTPS 访问的机器上运行 `serve`（见 `deploy/nginx.example.conf`），设置 `site.base_url`，再配一个推送渠道。不开服务也能用（网页就是静态文件，可以放任何静态托管），只是按钮会隐藏。
+想在手机上看：在一台能通过 HTTPS 访问的机器上运行 `serve`（见 `deploy/nginx.example.conf`），设置 `site.base_url`，再配一个推送渠道（[怎么设](docs/notifications.zh-CN.md)）。不开服务也能用（网页就是静态文件，可以放任何静态托管），只是按钮会隐藏。
 
 `config.toml` 里把 `language` 设为 `"zh-CN"`，日报、网页和报告就都是中文。
 

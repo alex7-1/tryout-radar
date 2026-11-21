@@ -25,7 +25,7 @@ Talk with the user in their language and keep it short.
 2. `radar init --language <en or zh-CN>` creates `HOME/config.toml`.
 3. **Projects.** Run `radar discover` and look at `workspaces` (folders and session titles of the last week). Propose the projects you see (name, folder, one line about what it is and what tools would help) and ask the user which to keep, what to fix and what is missing. Add each one with `radar project add - --manual` and a JSON body `{"name", "path", "about", "interests": [...], "rules_files": ["AGENTS.md", ...], "trial_mode": "assess"}`. Use `"try"` only when the user says the trial runner may install and run code in that project's sandbox (explain SECURITY.md in one sentence: agent rules and a separate branch, not an operating-system sandbox).
 4. **Topics.** Suggest 3–6 topics from the projects (for example "Claude Code / Codex", "web design", "AIGC"), each with search keywords and the projects it is mainly for; add each with `radar topic add -` and `{"name", "focus", "keywords": "a, b, c", "projects": [keys]}` (empty `projects` = all projects).
-5. **Notifications** (optional). Ask where the daily summary should go: WeCom, Feishu, Telegram, Slack, Discord, or none. Add the matching `[[notify]]` block to `HOME/config.toml` (see `ROOT/config.example.toml`) and tell the user which environment variable to set themselves. Never write tokens or keys into any file.
+5. **Notifications** (optional). Ask where the daily summary should go: WeCom, Feishu, Telegram, Slack, Discord, or none. Add the matching `[[notify]]` block to `HOME/config.toml` (see `ROOT/config.example.toml`). Walk the user through getting the key and setting the environment variable themselves, following `ROOT/docs/notifications.md` (Chinese: `notifications.zh-CN.md`) for their platform and OS, including restarting the app afterwards. Never write tokens or keys into any file. When they say it is set, send a test (below).
 6. **Site** (optional). `radar serve` serves the digest at `http://127.0.0.1:8091/<secret_path>/`. For a phone, the site has to run on a machine reachable over HTTPS: point to `ROOT/deploy/` and set `site.base_url`.
 7. **Schedule.** If a tool for creating scheduled tasks is available (the Claude desktop app has one), create two:
    - daily, e.g. 12:00: `Use the tryout-radar skill to run the Tryout Radar scout now.`
@@ -44,6 +44,12 @@ When the user wants the daily digest made by another model (DeepSeek, Qwen, GPT,
 ## Run the trial runner
 
 Read `ROOT/prompts/trial.md` completely and follow it, with the same command rule. The sandbox folder is `HOME/sandbox/`.
+
+## Set up or test notifications
+
+- Add or change a channel: as in setup step 5.
+- Test: run `radar notify -` with a one-line message such as `Tryout Radar test` on standard input. Show the user each channel's line. For a `FAILED` line, find the cause in the "Not arriving?" table of `ROOT/docs/notifications.md` and tell them the fix in plain words.
+- A variable reported as empty right after the user set it usually means the app or terminal was started before; ask them to restart it. Only if that doesn't help, point them to the `~/.claude/settings.json` `env` option in that doc, which they edit themselves.
 
 ## Change projects or topics on request
 

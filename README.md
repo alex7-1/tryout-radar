@@ -55,7 +55,7 @@ Buttons at the bottom start the scout or the trial runner in the current session
 - **One-click trials.** A queued request becomes a git worktree on branch `tryout/<id>`, an install, a test run, and a report with evidence (commands, test results, diff stat). Nothing is merged or pushed; adopting is a separate step you start.
 - **Project rules first.** The trial runner reads each project's `AGENTS.md` / `CLAUDE.md` before touching it, and stops to ask when a step would need money, keys, admin rights, production access or sending data out.
 - **Any model for the scout.** OpenAI, DeepSeek, Qwen, Kimi, GLM, Gemini, Claude, OpenRouter or a local model in Ollama: code does the fixed steps, the model only judges, and its answers are checked before they reach the digest.
-- **Notifications** to WeCom (group robot or app), Feishu, Telegram, Slack or Discord.
+- **Notifications** to WeCom (group robot or app), Feishu, Telegram, Slack or Discord ([setup for each](docs/notifications.md)).
 - **No dependencies.** Python 3.11+ standard library only. A static site plus a tiny server for the buttons.
 
 ## How it fits together
@@ -92,7 +92,7 @@ Read prompts/scout.md in this folder completely and follow it exactly.      (dai
 Read prompts/trial.md in this folder completely and follow it exactly.      (nightly, 22:00)
 ```
 
-To read the digest on your phone, run `serve` on a machine you can reach over HTTPS (see `deploy/nginx.example.conf`), set `site.base_url`, and configure a notification channel. The site works without the server too (plain static files, e.g. on any static host), but then the buttons are hidden.
+To read the digest on your phone, run `serve` on a machine you can reach over HTTPS (see `deploy/nginx.example.conf`), set `site.base_url`, and configure a notification channel ([how](docs/notifications.md)). The site works without the server too (plain static files, e.g. on any static host), but then the buttons are hidden.
 
 ## Run with any model (API mode)
 

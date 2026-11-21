@@ -191,6 +191,7 @@ check_links = true               # open web links before they go into the digest
 
 # ---------------------------------------------------------------------------
 # Notifications: every channel listed here gets the daily summary, trial receipts and trial reports.
+# How to get each key and test it: docs/notifications.md (中文: docs/notifications.zh-CN.md)
 # ---------------------------------------------------------------------------
 
 # [[notify]]

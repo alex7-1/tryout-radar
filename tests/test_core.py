@@ -1,5 +1,6 @@
 """Run with:  python -m unittest discover -s tests"""
 import json
+import os
 import shutil
 import tempfile
 import threading
@@ -253,6 +254,47 @@ class NotifyTest(unittest.TestCase):
         res = notify.send_all({"notify": [{"type": "telegram", "token_env": "NO_SUCH_VAR_X", "chat_id_env": "NO_SUCH_VAR_Y"},
                                           {"type": "nope"}]}, "hi")
         self.assertEqual([r[1] for r in res], [False, False])
+
+    def test_requests_carry_own_user_agent(self):
+        # Discord's Cloudflare answers 403 (error code 1010) to the default "Python-urllib" agent.
+        seen = []
+
+        class Resp:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def read(self):
+                return b""
+
+        def fake_urlopen(req, timeout=None):
+            seen.append(req.get_header("User-agent"))
+            return Resp()
+
+        orig = notify.urllib.request.urlopen
+        notify.urllib.request.urlopen = fake_urlopen
+        try:
+            os.environ["TR_TEST_DISCORD_URL"] = "https://discord.example/webhook"
+            notify.send_discord_webhook({"url_env": "TR_TEST_DISCORD_URL"}, "hi")
+        finally:
+            notify.urllib.request.urlopen = orig
+            os.environ.pop("TR_TEST_DISCORD_URL", None)
+        self.assertEqual(seen, [notify.USER_AGENT])
+
+    def test_wecom_webhook_takes_key_or_whole_url(self):
+        urls = []
+        orig = notify._post
+        notify._post = lambda url, body: urls.append(url) or {"errcode": 0}
+        try:
+            for value in ("abc-123", " https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=abc-123 "):
+                os.environ["TR_TEST_WECOM_KEY"] = value
+                notify.send_wecom_webhook({"key_env": "TR_TEST_WECOM_KEY"}, "hi")
+        finally:
+            notify._post = orig
+            os.environ.pop("TR_TEST_WECOM_KEY", None)
+        self.assertEqual(urls, ["https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=abc-123"] * 2)
 
 
 if __name__ == "__main__":

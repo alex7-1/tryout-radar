@@ -11,10 +11,13 @@ import urllib.request
 from .config import env
 from .mdlite import LINK_RE, to_plain
 
+# Discord (behind Cloudflare) answers 403 "error code: 1010" to Python's default "Python-urllib/x.y" agent.
+USER_AGENT = "tryout-radar (+https://github.com/alex7-1/tryout-radar)"
+
 
 def _post(url, body, timeout=20):
     req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"),
-                                 headers={"Content-Type": "application/json; charset=utf-8"})
+                                 headers={"Content-Type": "application/json; charset=utf-8", "User-Agent": USER_AGENT})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         raw = r.read().decode("utf-8", "replace")
     try:
@@ -24,7 +27,8 @@ def _post(url, body, timeout=20):
 
 
 def _get(url, timeout=20):
-    with urllib.request.urlopen(url, timeout=timeout) as r:
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode("utf-8"))
 
 
@@ -61,6 +65,9 @@ def _wecom_check(r):
 
 def send_wecom_webhook(ch, md):
     (key,) = _need(ch, "key_env")
+    key = key.strip()
+    if key.startswith("http"):  # the whole webhook URL was pasted: keep only what follows key=
+        key = urllib.parse.parse_qs(urllib.parse.urlsplit(key).query).get("key", [""])[0]
     url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=" + urllib.parse.quote(key)
     for part in chunks(md, 4000):
         _wecom_check(_post(url, {"msgtype": "markdown", "markdown": {"content": part}}))
