@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tryout-radar"
-version = "0.3.0"
+version = "0.3.1"
 description = "Find new AI tools that fit your projects, try them in a sandbox branch, report back."
 readme = "README.md"
 license = { text = "MIT" }
